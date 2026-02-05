@@ -34,7 +34,7 @@ async function decodeAudioData(
 
 /* Guideline: Always use a function to create a new instance with the latest API key */
 const getApiKey = () => {
-  const key = (import.meta as any)?.env?.VITE_GEMINI_API_KEY || (process as any)?.env?.API_KEY;
+  const key = (import.meta as any)?.env?.VITE_GEMINI_API_KEY;
   if (!key) {
     throw new Error('Missing GEMINI API key. Set VITE_GEMINI_API_KEY in .env.local');
   }

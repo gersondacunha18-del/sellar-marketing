@@ -65,9 +65,13 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ currentUser, products }) 
       const aiResponse = await generateAIResponse(prompt, history);
       setMessages(prev => [...prev, { role: 'model', text: aiResponse || 'Desculpe, não consegui responder agora.' }]);
     } catch (error) {
-      const message = error instanceof Error
-        ? `Erro ao processar: ${error.message}`
-        : 'Erro ao processar. Verifique sua conexão.';
+      const isMissingKey = error instanceof Error
+        && /Missing GEMINI API key/i.test(error.message);
+      const message = isMissingKey
+        ? 'A IA ainda nao foi configurada. Defina `VITE_GEMINI_API_KEY` no arquivo `.env.local` e reinicie o app.'
+        : error instanceof Error
+          ? `Erro ao processar: ${error.message}`
+          : 'Erro ao processar. Verifique sua conexao.';
       setMessages(prev => [...prev, { role: 'model', text: message, isError: true }]);
     } finally {
       setIsTyping(false);
