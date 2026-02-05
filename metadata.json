@@ -1,0 +1,8 @@
+{
+  "name": "Seller Marketing",
+  "description": "A universal marketplace combining social networking, real-time auctions, and a powerful affiliate commission system. Buy, sell, or auction anything from livestock to luxury real estate, and earn by referring others.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
