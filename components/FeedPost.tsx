@@ -166,7 +166,7 @@ const FeedPost: React.FC<FeedPostProps> = ({ product, isNews = false, onProductC
                 className={`w-full sm:flex-1 font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 border text-[10px] uppercase tracking-widest ${isHighCommission ? 'bg-emerald-600 text-white border-emerald-500 hover:bg-emerald-700 shadow-lg shadow-emerald-100' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-100'}`}
               >
                 <i className={`fa-solid ${isHighCommission ? 'fa-bolt-lightning' : 'fa-share-nodes'}`}></i>
-                Ganhar {Math.round(product.commissionRate * 100)}%
+                Compartilhar
               </button>
             </div>
           ) : (

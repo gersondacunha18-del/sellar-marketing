@@ -11,11 +11,35 @@ interface ShareModalProps {
 const ShareModal: React.FC<ShareModalProps> = ({ product, userId, onClose }) => {
   const [copied, setCopied] = useState(false);
   const affiliateLink = `https://sellar.market/p/${product.id}?ref=${userId}`;
+  const encodedLink = encodeURIComponent(affiliateLink);
+  const encodedText = encodeURIComponent(`Confira ${product.title}`);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(affiliateLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = (channel: 'whatsapp' | 'instagram' | 'facebook' | 'telegram') => {
+    const shareUrls = {
+      whatsapp: `https://wa.me/?text=${encodedText}%20${encodedLink}`,
+      instagram: 'https://www.instagram.com/',
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`,
+      telegram: `https://t.me/share/url?url=${encodedLink}&text=${encodedText}`
+    } as const;
+
+    if (channel === 'instagram') {
+      copyToClipboard();
+      window.dispatchEvent(new CustomEvent('show-notification', {
+        detail: {
+          title: 'Link copiado',
+          body: 'Cole o link no seu story do Instagram.',
+          type: 'info'
+        }
+      }));
+    }
+
+    window.open(shareUrls[channel], '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -55,12 +79,12 @@ const ShareModal: React.FC<ShareModalProps> = ({ product, userId, onClose }) => 
             <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Divulgar em:</p>
             <div className="grid grid-cols-4 gap-4">
               {[
-                { icon: 'fa-whatsapp', color: 'bg-[#25D366]', label: 'WhatsApp' },
-                { icon: 'fa-instagram', color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]', label: 'Story' },
-                { icon: 'fa-facebook', color: 'bg-[#1877F2]', label: 'Post' },
-                { icon: 'fa-telegram', color: 'bg-[#0088cc]', label: 'Grupo' }
-              ].map((social, i) => (
-                <button key={i} className="flex flex-col items-center gap-2 group">
+                { key: 'whatsapp', icon: 'fa-whatsapp', color: 'bg-[#25D366]', label: 'WhatsApp' },
+                { key: 'instagram', icon: 'fa-instagram', color: 'bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7]', label: 'Story' },
+                { key: 'facebook', icon: 'fa-facebook', color: 'bg-[#1877F2]', label: 'Post' },
+                { key: 'telegram', icon: 'fa-telegram', color: 'bg-[#0088cc]', label: 'Grupo' }
+              ].map((social) => (
+                <button key={social.key} onClick={() => handleShare(social.key as 'whatsapp' | 'instagram' | 'facebook' | 'telegram')} className="flex flex-col items-center gap-2 group">
                   <div className={`w-12 h-12 ${social.color} text-white rounded-full flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform`}>
                     <i className={`fa-brands ${social.icon}`}></i>
                   </div>
